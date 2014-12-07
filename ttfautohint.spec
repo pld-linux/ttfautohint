@@ -1,18 +1,21 @@
 Summary:	Auto-generating hints for TrueType fonts
 Summary(pl.UTF-8):	Automatyczne generowanie hintingu dla fontów TrueType
 Name:		ttfautohint
-Version:	0.97
+Version:	1.2
 Release:	1
 License:	FreeType License or GPL v2+
-Group:		Applications
-Source0:	http://downloads.sourceforge.net/freetype/%{name}-%{version}.tar.gz
-# Source0-md5:	f85a4d5d70f960c9a9a6f26fbda495ae
+Group:		Applications/Graphics
+Source0:	http://download.savannah.gnu.org/releases/freetype/%{name}-%{version}.tar.gz
+# Source0-md5:	ebc7f07eaa29af8550828ac043364150
 URL:		http://freetype.org/
-BuildRequires:	QtCore-devel >= 4.6
-BuildRequires:	QtGui-devel >= 4.6
+BuildRequires:	QtCore-devel >= 4.8
+BuildRequires:	QtGui-devel >= 4.8
 BuildRequires:	freetype-devel >= 1:2.4.5
+BuildRequires:	harfbuzz-devel >= 0.9.19
+BuildRequires:	pkgconfig >= 1:0.24
 BuildRequires:	qt4-build >= 4.6
 Requires:	freetype >= 1:2.4.5
+Requires:	harfbuzz >= 0.9.19
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -34,7 +37,7 @@ wykorzystujących FreeType.
 Summary:	GUI application to replace hints in a TrueType font
 Summary(pl.UTF-8):	Graficzna aplikacja do podmiany reguł hintingu w fontach TrueType
 Group:		X11/Applications/Graphics
-Requires:	QtGui >= 4.6
+Requires:	QtGui >= 4.8
 Requires:	freetype >= 1:2.4.5
 
 %description gui
