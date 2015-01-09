@@ -1,12 +1,12 @@
 Summary:	Auto-generating hints for TrueType fonts
 Summary(pl.UTF-8):	Automatyczne generowanie hintingu dla fontów TrueType
 Name:		ttfautohint
-Version:	1.2
+Version:	1.3
 Release:	1
 License:	FreeType License or GPL v2+
 Group:		Applications/Graphics
 Source0:	http://download.savannah.gnu.org/releases/freetype/%{name}-%{version}.tar.gz
-# Source0-md5:	ebc7f07eaa29af8550828ac043364150
+# Source0-md5:	40c8a208f050a9f6a91d63a45cc62aa4
 URL:		http://freetype.org/
 BuildRequires:	QtCore-devel >= 4.8
 BuildRequires:	QtGui-devel >= 4.8
