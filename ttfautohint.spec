@@ -1,22 +1,35 @@
+#
+# Conditional build:
+%bcond_with	qt5	# Qt 5 instead of Qt 4
+#
 Summary:	Auto-generating hints for TrueType fonts
 Summary(pl.UTF-8):	Automatyczne generowanie hintingu dla fontów TrueType
 Name:		ttfautohint
-Version:	1.4.1
+Version:	1.5
 Release:	1
 License:	FreeType License or GPL v2+
 Group:		Applications/Graphics
 Source0:	http://download.savannah.gnu.org/releases/freetype/%{name}-%{version}.tar.gz
-# Source0-md5:	9338692eeede0474dc4457cbfb46efc7
+# Source0-md5:	39d6aa578c66c9bb518a9feb1b85b385
 URL:		http://freetype.org/
-BuildRequires:	QtCore-devel >= 4.8
-BuildRequires:	QtGui-devel >= 4.8
 BuildRequires:	freetype-devel >= 1:2.4.5
 BuildRequires:	harfbuzz-devel >= 0.9.19
 BuildRequires:	pkgconfig >= 1:0.24
+%if %{with qt5}
+BuildRequires:	Qt5Core-devel >= 5.0
+BuildRequires:	Qt5Gui-devel >= 5.0
+BuildRequires:	Qt5Widgets-devel >= 5.0
+BuildRequires:	qt5-build >= 5.0
+%else
+BuildRequires:	QtCore-devel >= 4.8
+BuildRequires:	QtGui-devel >= 4.8
 BuildRequires:	qt4-build >= 4.6
+%endif
 Requires:	freetype >= 1:2.4.5
 Requires:	harfbuzz >= 0.9.19
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define		qtmajor	%{?with_qt5:5}%{!?with_qt5:4}
 
 %description
 This project provides a utility which takes a TrueType font as the
@@ -37,7 +50,9 @@ wykorzystujących FreeType.
 Summary:	GUI application to replace hints in a TrueType font
 Summary(pl.UTF-8):	Graficzna aplikacja do podmiany reguł hintingu w fontach TrueType
 Group:		X11/Applications/Graphics
+%if %{without qt5}
 Requires:	QtGui >= 4.8
+%endif
 Requires:	freetype >= 1:2.4.5
 
 %description gui
@@ -53,9 +68,9 @@ Nowe reguły są oparte na auto-hinterze z FreeType.
 
 %build
 %configure \
-	MOC=/usr/bin/moc-qt4 \
-	QMAKE=/usr/bin/qmake-qt4 \
-	QTDIR=%{_libdir}/qt4 \
+	MOC=/usr/bin/moc-qt%{qtmajor} \
+	QMAKE=/usr/bin/qmake-qt%{qtmajor} \
+	QTDIR=%{_libdir}/qt%{qtmajor} \
 	--disable-silent-rules
 
 %{__make}
