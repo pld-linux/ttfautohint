@@ -1,19 +1,20 @@
 #
 # Conditional build:
-%bcond_with	qt5	# Qt 5 instead of Qt 4
+%bcond_with	qt5		# Qt 5 instead of Qt 4
+%bcond_without	static_libs	# static library
 #
 Summary:	Auto-generating hints for TrueType fonts
 Summary(pl.UTF-8):	Automatyczne generowanie hintingu dla fontów TrueType
 Name:		ttfautohint
-Version:	1.5
+Version:	1.8.1
 Release:	1
 License:	FreeType License or GPL v2+
 Group:		Applications/Graphics
 Source0:	http://download.savannah.gnu.org/releases/freetype/%{name}-%{version}.tar.gz
-# Source0-md5:	39d6aa578c66c9bb518a9feb1b85b385
+# Source0-md5:	929201ad7717013e179e044008c253d1
 URL:		http://freetype.org/
 BuildRequires:	freetype-devel >= 1:2.4.5
-BuildRequires:	harfbuzz-devel >= 0.9.19
+BuildRequires:	harfbuzz-devel >= 1.3.0
 BuildRequires:	pkgconfig >= 1:0.24
 %if %{with qt5}
 BuildRequires:	Qt5Core-devel >= 5.0
@@ -26,7 +27,7 @@ BuildRequires:	QtGui-devel >= 4.8
 BuildRequires:	qt4-build >= 4.6
 %endif
 Requires:	freetype >= 1:2.4.5
-Requires:	harfbuzz >= 0.9.19
+Requires:	harfbuzz >= 1.3.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		qtmajor	%{?with_qt5:5}%{!?with_qt5:4}
@@ -45,6 +46,33 @@ nowy font, w którym wszystkie glify wykorzystują hinting utworzony
 przy użyciu modułu autohintingu z FreeType. Celem jest zapewnienie tej
 samej jakości, którą daje autohinter, na platformach nie
 wykorzystujących FreeType.
+
+%package devel
+Summary:	Header files for ttfautohint library
+Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki ttfautohint
+Group:		Development/Libraries
+Requires:	%{name} = %{version}-%{release}
+Requires:	freetype-devel >= 1:2.4.5
+Requires:	harfbuzz-devel >= 1.3.0
+
+%description devel
+Header files for ttfautohint automatic font hinting library.
+
+%description devel -l pl.UTF-8
+Pliki nagłówkowe biblioteki ttfautohint, służącej do automatycznego
+hintingu fontów.
+
+%package static
+Summary:	Static ttfautohint library
+Summary(pl.UTF-8):	Statyczna biblioteka ttfautohint
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+
+%description static
+Static ttfautohint library.
+
+%description static -l pl.UTF-8
+Statyczna biblioteka ttfautohint.
 
 %package gui
 Summary:	GUI application to replace hints in a TrueType font
@@ -71,7 +99,8 @@ Nowe reguły są oparte na auto-hinterze z FreeType.
 	MOC=/usr/bin/moc-qt%{qtmajor} \
 	QMAKE=/usr/bin/qmake-qt%{qtmajor} \
 	QTDIR=%{_libdir}/qt%{qtmajor} \
-	--disable-silent-rules
+	--disable-silent-rules \
+	%{!?with_static_libs:--disable-static}
 
 %{__make}
 
@@ -81,18 +110,39 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-# requirements to automatically install man pages are insane - do it manually
+# obsoleted by pkg-config
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/libttfautohint.la
+
+# install (dist) man pages manually - requirements to automatically install them
+# are insane ($DISPLAY + ImageMagick + inkscape + pandoc + xelatex + NotoSans fonts)
 install -d $RPM_BUILD_ROOT%{_mandir}/man1
 cp -p frontend/ttf*.1 $RPM_BUILD_ROOT%{_mandir}/man1
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post	-p /sbin/ldconfig
+%postun	-p /sbin/ldconfig
+
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS COPYING ChangeLog FTL.TXT NEWS README THANKS TODO
 %attr(755,root,root) %{_bindir}/ttfautohint
+%attr(755,root,root) %{_libdir}/libttfautohint.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libttfautohint.so.1
 %{_mandir}/man1/ttfautohint.1*
+
+%files devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libttfautohint.so
+%{_includedir}/ttfautohint*.h
+%{_pkgconfigdir}/ttfautohint.pc
+
+%if %{with static_libs}
+%files static
+%defattr(644,root,root,755)
+%{_libdir}/libttfautohint.a
+%endif
 
 %files gui
 %defattr(644,root,root,755)
