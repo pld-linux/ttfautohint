@@ -6,12 +6,12 @@
 Summary:	Auto-generating hints for TrueType fonts
 Summary(pl.UTF-8):	Automatyczne generowanie hintingu dla fontów TrueType
 Name:		ttfautohint
-Version:	1.8.2
+Version:	1.8.3
 Release:	1
 License:	FreeType License or GPL v2+
 Group:		Applications/Graphics
 Source0:	http://download.savannah.gnu.org/releases/freetype/%{name}-%{version}.tar.gz
-# Source0-md5:	9f540ac8c391ad32c39b0a3609e2f5f1
+# Source0-md5:	b88e6d3c9001198dc7bfaedd15debe1a
 URL:		http://freetype.org/
 BuildRequires:	freetype-devel >= 1:2.4.5
 BuildRequires:	harfbuzz-devel >= 1.3.0
