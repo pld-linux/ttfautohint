@@ -1,36 +1,36 @@
 #
 # Conditional build:
-%bcond_with	qt5		# Qt 5 instead of Qt 4
+%bcond_with	qt4		# Qt 4 instead of Qt 5
 %bcond_without	static_libs	# static library
 #
 Summary:	Auto-generating hints for TrueType fonts
 Summary(pl.UTF-8):	Automatyczne generowanie hintingu dla fontów TrueType
 Name:		ttfautohint
-Version:	1.8.3
+Version:	1.8.4
 Release:	1
 License:	FreeType License or GPL v2+
 Group:		Applications/Graphics
 Source0:	http://download.savannah.gnu.org/releases/freetype/%{name}-%{version}.tar.gz
-# Source0-md5:	b88e6d3c9001198dc7bfaedd15debe1a
+# Source0-md5:	5e5b320217909ddfc9ba527cbf7ec823
 URL:		http://freetype.org/
 BuildRequires:	freetype-devel >= 1:2.4.5
-BuildRequires:	harfbuzz-devel >= 1.3.0
+BuildRequires:	harfbuzz-devel >= 2.4.0
 BuildRequires:	pkgconfig >= 1:0.24
-%if %{with qt5}
+%if %{with qt4}
+BuildRequires:	QtCore-devel >= 4.8
+BuildRequires:	QtGui-devel >= 4.8
+BuildRequires:	qt4-build >= 4.8
+%else
 BuildRequires:	Qt5Core-devel >= 5.0
 BuildRequires:	Qt5Gui-devel >= 5.0
 BuildRequires:	Qt5Widgets-devel >= 5.0
 BuildRequires:	qt5-build >= 5.0
-%else
-BuildRequires:	QtCore-devel >= 4.8
-BuildRequires:	QtGui-devel >= 4.8
-BuildRequires:	qt4-build >= 4.8
 %endif
 Requires:	freetype >= 1:2.4.5
-Requires:	harfbuzz >= 1.3.0
+Requires:	harfbuzz >= 2.4.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		qtmajor	%{?with_qt5:5}%{!?with_qt5:4}
+%define		qtmajor	%{?with_qt4:4}%{!?with_qt4:5}
 
 %description
 This project provides a utility which takes a TrueType font as the
@@ -53,7 +53,7 @@ Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki ttfautohint
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	freetype-devel >= 1:2.4.5
-Requires:	harfbuzz-devel >= 1.3.0
+Requires:	harfbuzz-devel >= 2.4.0
 
 %description devel
 Header files for ttfautohint automatic font hinting library.
@@ -78,7 +78,7 @@ Statyczna biblioteka ttfautohint.
 Summary:	GUI application to replace hints in a TrueType font
 Summary(pl.UTF-8):	Graficzna aplikacja do podmiany reguł hintingu w fontach TrueType
 Group:		X11/Applications/Graphics
-%if %{without qt5}
+%if %{with qt4}
 Requires:	QtGui >= 4.8
 %endif
 Requires:	freetype >= 1:2.4.5
